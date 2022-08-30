@@ -1,5 +1,6 @@
 /.idea/vcs.xml
 /.idea/load-planner-mll-node.iml
 /.idea/modules.xml
+/.idea/workspace.xml
 node_modules/
 /package-lock.json

@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-const bcrypt=require('bcryptjs')
+const bcrypt=require('bcryptjs');
 
 var validateEmail = function(email) {
     var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -7,7 +7,7 @@ var validateEmail = function(email) {
 };
 
 const userSchema=new mongoose.Schema({
-    name:{
+    fullName:{
         type:String,
     },
     email:{
@@ -23,6 +23,17 @@ const userSchema=new mongoose.Schema({
         required:true,
         required:'username is required',
         unique:true,
+    },
+    companyName:{
+        type:String,
+        required:true,
+        required:'companyName is required',
+        unique:true,
+    },
+    customers:{
+        type:Array,
+        required:true,
+        required:'customer required',
     },
     password:{
         type:String,

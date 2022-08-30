@@ -2,9 +2,9 @@ const express=require('express')
 const router=express.Router()
 const passport = require('passport');
 const UserController=require('../controllers/user.controller')
+const {addUserValidation}=require('../middleware/validation')
 
-
-router.post('/register',UserController.createUser)
+router.post('/register',addUserValidation,UserController.createUser)
 
 router.post('/login',UserController.login)
 

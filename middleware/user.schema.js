@@ -6,8 +6,8 @@ const schema = {
         username: joi.string().min(3).max(100).required(),
         companyName: joi.string().min(2).max(100).required(),
         customers: joi.array().min(1).max(100).required(),
-        email: joi.string().email().required(),
-        password: joi.string().required(),
+        email: joi.string().email().required()
+        // password: joi.string().required(),
     })
 };
 

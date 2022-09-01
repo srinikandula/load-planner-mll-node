@@ -1,5 +1,6 @@
 const Order = require("../models/order.model");
-const csv=require('csvtojson')
+const csv=require('csvtojson');
+const path = require('path');
 
 
 exports.createOrder = (req, res, next)=>{
@@ -61,16 +62,18 @@ exports.uploadCsv = (req, res) => {
 
   exports.template = async (req, res, next) => {
     
-    const templateFileUrl = `${__dirname}/orderTemplate.csv`;
+    const templateFileUrl = path.join(__dirname,'../template','orderTemplate.csv');
     res.download(templateFileUrl);
     
   }
+
+
 
   exports.getAll = (req, res, next) => {
 
     Order.find({}, (err, result) => {
         if(err) throw err;
-        res.send({success: true,count:result.length,message:result})
+        res.send({success: true,count:result.length,data:result})
     })
   }
 

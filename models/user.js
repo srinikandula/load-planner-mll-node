@@ -37,11 +37,12 @@ const userSchema=new mongoose.Schema({
     },
     password:{
         type:String,
-        required:true,
-        required:'Password Required',
-        // minlength : [4,'Password must be atleast 4 character long']
+    },
+    active : {
+        type:Boolean,
+        // required:true
     }
-})
+},{timestamps:true})
 
 let User = module.exports= mongoose.model('User',userSchema)
 
@@ -56,13 +57,7 @@ module.exports.getUserByUsername=function(username,callback){
 }
 
 module.exports.addUser=function(newUser,callback){
-    bcrypt.genSalt(10,(err,salt)=>{
-        bcrypt.hash(newUser.password,salt,(err,hash)=>{
-            if(err) throw err;
-            newUser.password=hash;
             newUser.save(callback)
-        })
-    })
 }
 
 module.exports.comparePassword=function(candidatePassword,hash,callback){

@@ -62,8 +62,8 @@ exports.uploadCsv = (req, res) => {
 
   exports.template = async (req, res, next) => {
     
-    const templateFileUrl = path.join(__dirname,'../template','orderTemplate.csv');
-    res.download(templateFileUrl);
+    const templateFileUrl = `${configuration.baseUrl}/template/order/orderTemplate.csv`;
+     res.send({success: true,file:templateFileUrl})
     
   }
 
@@ -71,7 +71,16 @@ exports.uploadCsv = (req, res) => {
 
   exports.getAll = (req, res, next) => {
 
-    Order.find({}, (err, result) => {
+    console.log(req.query.city,req.query.state)
+    Order.find(
+        {
+
+            "$or":[
+                {"consignorCity":{$regex:req.query.city}},
+                {"consigneeState":{$regex:req.query.state}}
+            ]
+
+        }, (err, result) => {
         if(err) throw err;
         res.send({success: true,count:result.length,data:result})
     })

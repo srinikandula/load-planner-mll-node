@@ -29,6 +29,8 @@ app.use(cors())
 
 app.use(bodyParser.json())
 
+app.use('/template', express.static('template'));
+
 require('./middleware/passport')(passport);
 
 app.use(session({ secret: config.jwt.secret }))
@@ -39,6 +41,7 @@ app.use(passport.session());
 
 app.use(express.static(path.join(__dirname,'public')))
 
+global.configuration = require('./config/config')
 
 app.use('/api/v1/users',users)
 app.use('/api/v1/orders',orders)

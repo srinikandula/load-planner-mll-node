@@ -23,8 +23,6 @@ let opsMail = async()=>{
     .replace('$$CUSTOMERS$$', newUser.customers)
 
 
-
-  
   var transporter =  await nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,

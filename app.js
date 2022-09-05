@@ -4,26 +4,15 @@ const bodyParser=require('body-parser')
 const path = require('path')
 const cors = require('cors')
 const passport = require ('passport')
-const users=require('./routes/users')
-const orders=require('./routes/order.route')
+const usersRoute=require('./routes/users.route')
+const ordersRoute=require('./routes/order.route')
 const session = require('express-session');
 require('dotenv').config()
 const app = express()
 const config = require('./config/config')
 const connectDB = require('./config/db');
 
-
 connectDB();
-
-// mongoose.connect(process.env.MONGO_URI)
-
-// mongoose.connection.on('connected',()=>{
-//     console.log(`Database connected to ::: ${process.env.MONGO_URI}`)
-// })
-// mongoose.connection.on('error',(err)=>{
-//     console.log(`Database error  ::: ${err}`)
-// })
-
 
 app.use(cors())
 
@@ -31,7 +20,7 @@ app.use(bodyParser.json())
 
 app.use('/template', express.static('template'));
 
-require('./middleware/passport')(passport);
+require('./middlewares/passport')(passport);
 
 app.use(session({ secret: config.jwt.secret }))
 
@@ -43,8 +32,9 @@ app.use(express.static(path.join(__dirname,'public')))
 
 global.configuration = require('./config/config')
 
-app.use('/api/v1/users',users)
-app.use('/api/v1/orders',orders)
+app.use('/api/v1/users',usersRoute)
+
+app.use('/api/v1/orders',ordersRoute)
 
 app.set('view engine','ejs')  
 
@@ -55,6 +45,14 @@ app.get('/',(req,res)=>{
 app.get('/p',(req,res)=>{
     res.render('Profile')
 })
+
+
+app.get("*", (req, res)=>{
+    res.status(404).send({ error: "URL Not found..!" });
+  });
+app.post("*", (req, res)=>{
+    res.status(404).send({ error: "URL Not found..!" });
+  });
 
 
 app.listen(config.PORT,()=>{

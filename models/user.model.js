@@ -30,10 +30,10 @@ const userSchema=new mongoose.Schema({
         required:'companyName is required',
         unique:true,
     },
-    customers:{
-        type:Array,
+    mobile:{
+        type:Number,
         required:true,
-        required:'customer required',
+        required:'mobile no required',
     },
     password:{
         type:String,
@@ -46,23 +46,3 @@ const userSchema=new mongoose.Schema({
 
 let User = module.exports= mongoose.model('User',userSchema)
 
-module.exports.getUserById=function(id,callback){
-    User.findById(id,callback)
-}
-
-module.exports.getUserByUsername=function(username,callback){
-    let query={username:username}
-
-    User.findOne(query,callback)
-}
-
-module.exports.addUser=function(newUser,callback){
-            newUser.save(callback)
-}
-
-module.exports.comparePassword=function(candidatePassword,hash,callback){
-    bcrypt.compare(candidatePassword,hash,(err,isMatch)=>{
-        if(err) throw err;
-        callback(null,isMatch)
-    })
-}

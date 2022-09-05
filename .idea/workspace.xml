@@ -19,7 +19,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5efa58da-9139-47d7-86f8-1d50b50e8ba3" name="Default Changelist" comment="" />
+    <list default="true" id="5efa58da-9139-47d7-86f8-1d50b50e8ba3" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/order.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/order.controller.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -46,18 +49,22 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
   </component>
   <component name="RunManager">
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -72,8 +79,16 @@
       <option name="presentableId" value="Default" />
       <updated>1661846649604</updated>
       <workItem from="1661846651343" duration="290000" />
-      <workItem from="1661846950507" duration="781000" />
+      <workItem from="1661846950507" duration="4813000" />
     </task>
+    <task id="LOCAL-00001" summary="Adding git ignore file">
+      <created>1661847805192</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1661847805192</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -90,5 +105,27 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Adding git ignore file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding git ignore file" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1618" height="232" key="GridCell.Tab.0.bottom" timestamp="1662273297802">
+      <screen x="0" y="23" width="1680" height="963" />
+    </state>
+    <state width="1618" height="232" key="GridCell.Tab.0.bottom/0.23.1680.963@0.23.1680.963" timestamp="1662273297802" />
+    <state width="1618" height="232" key="GridCell.Tab.0.center" timestamp="1662273297802">
+      <screen x="0" y="23" width="1680" height="963" />
+    </state>
+    <state width="1618" height="232" key="GridCell.Tab.0.center/0.23.1680.963@0.23.1680.963" timestamp="1662273297802" />
+    <state width="1618" height="232" key="GridCell.Tab.0.left" timestamp="1662273297802">
+      <screen x="0" y="23" width="1680" height="963" />
+    </state>
+    <state width="1618" height="232" key="GridCell.Tab.0.left/0.23.1680.963@0.23.1680.963" timestamp="1662273297802" />
+    <state width="1618" height="232" key="GridCell.Tab.0.right" timestamp="1662273297802">
+      <screen x="0" y="23" width="1680" height="963" />
+    </state>
+    <state width="1618" height="232" key="GridCell.Tab.0.right/0.23.1680.963@0.23.1680.963" timestamp="1662273297802" />
   </component>
 </project>

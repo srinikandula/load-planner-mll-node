@@ -2,7 +2,7 @@ const mongoose=require('mongoose');
 
 
 const orderSchema=new mongoose.Schema({
-    customerId:{
+    consignmentNo:{
         type:Number,
     },
     consignorCity:{

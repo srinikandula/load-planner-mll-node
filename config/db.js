@@ -17,9 +17,7 @@ const connectDB = async () => {
 
     }
     console.log('mongoUrl', mongoUrl)
-    const conn = await mongoose.createConnection(mongoUrl, {
-        useFindAndModify: false,
-        useUnifiedTopology: true,
+    const conn = await mongoose.createConnection("mongodb://0.0.0.0:27017/loadplanner", {
     });
 
     console.log(`Mongo DB Connected : ${mongoUrl} `);

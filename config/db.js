@@ -18,8 +18,6 @@ const connectDB = async () => {
     }
     console.log('mongoUrl', mongoUrl)
     const conn = await mongoose.createConnection(mongoUrl, {
-        useNewUrlParser: true,
-        useCreateIndex: true,
         useFindAndModify: false,
         useUnifiedTopology: true,
     });

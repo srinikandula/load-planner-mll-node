@@ -17,10 +17,12 @@ const connectDB = async () => {
 
     }
     console.log('mongoUrl', mongoUrl)
-    const conn = await mongoose.createConnection("mongodb://0.0.0.0:27017/loadplanner", {
+    const conn = await mongoose.connect(mongoUrl, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
     });
 
-    console.log(`Mongo DB Connected : ${mongoUrl} `);
+    console.log(`Mongo DB Connected : ${conn.connection.host} : ${conn.connection.port}`);
 }
 
 module.exports = connectDB;

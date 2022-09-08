@@ -16,9 +16,11 @@ const connectDB = async () => {
         mongoUrl = "mongodb://" + config.mongo.host + "/" + config.mongo.database
 
     }
-    // console.log('mongoUrl', mongoUrl)
-    const conn = await mongoose.connect(mongoUrl, {
+    console.log('mongoUrl', mongoUrl)
+    const conn = await mongoose.createConnection(mongoUrl, {
         useNewUrlParser: true,
+        useCreateIndex: true,
+        useFindAndModify: false,
         useUnifiedTopology: true,
     });
 

@@ -127,20 +127,27 @@ exports.updatePassword = async (req, res) => {
   }
 };
 
-exports.allUsers = async (req, res, next) => {
-
+exports.allUsers = async (params,next) => {
+  var condition = {};
+  if(params.searchKey) {
+    condition = {
+      $or:
+          [
+            {"name": new RegExp(params.searchKey, "gi")}
+          ]
+    };
+  }
   try {
-    User.find({}, (err, user) => {
+    User.find({condition}, (err, users) => {
       if (err) {
-        return res.json({ success: false, message: "error" });
+        next({ success: false, message: err });
       } else {
-        return res.json({ success: true, length: user.length, data: user });
+        next( { success: true, length: user.length, data: users });
       }
     });
   } catch (err) {
-    res.status(500).join({ success: false, message: err });
+    next({ success: false, message: err });
   }
-
 };
 
 

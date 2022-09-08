@@ -11,8 +11,24 @@ router.post('/register',addUserValidation,UserController.createUser)
 router.post('/login',userLoginValidation,UserController.login)
 router.post('/createLogin',createLoginValidation,UserController.createLogin)
 router.patch('/updatePassword',UserController.updatePassword)
-router.get('/allUsers',UserController.allUsers)
+
 router.get('/pendingUsers',UserController.pendingUsers)
+
+router.get('/allUsers', function (req, res) {
+    UserController.allUsers(req.params, function (result) {
+        if(result.success) {
+            res
+                .status(200)
+                .json(result);
+            res.send(result);
+        }  else {
+            res
+                .status(500)
+                .json(result);
+            res.send(result);
+        }
+    });
+});
 router.get('/activeUsers',UserController.activeUsers)
 
 router.get('/profile', auth, UserController.profile);

@@ -10,13 +10,13 @@ const {
 } = require("../services/userMail.service");
 
 exports.createUser = async (req, res, next) => {
-  const { fullName, email, username, companyName, mobile, active } = req.body;
+  const { fullName, email, username, companyName, phoneNumber, active } = req.body;
   let newUser = {
     fullName,
     email,
     username,
     companyName,
-    mobile,
+    phoneNumber,
     active: false,
   };
   console.log("Creating",newUser)

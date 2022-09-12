@@ -3,6 +3,9 @@ const csv = require('csvtojson');
 const path = require('path');
 const { request } = require("http");
 const { result } = require("@hapi/joi/lib/base");
+const {error} = require("@hapi/joi/lib/annotate");
+let mongoose = require('mongoose');
+// let ObjectId = mongoose.Types.ObjectId;
 
 
 exports.createOrder = (req, res, next) => {
@@ -85,36 +88,78 @@ exports.template = async (req, res, next) => {
 }
 
 
-exports.getAll = async (req, res, next) => {
-
+exports.getAll = async (req, next) => {
     try {
-        let query = Order.find({});
-        const page = parseInt(req.query.page) || 1;
-        const pageSize = parseInt(req.query.limit) || 5;
+        let query = Order.find({orderStatus: null});
+        const page = req.body.page || 1;
+        const pageSize = req.body.count || 10;
         const skip = (page - 1) * pageSize;
-        const total = await Order.countDocuments();
+        const total = await Order.countDocuments({orderStatus: null});
         const pages = Math.ceil(total / pageSize);
-
         query = query.skip(skip).limit(pageSize);
         if (page > pages) {
-            return res.status(404).json({
-                status: "fail",
-                message: "No page found",
-            });
+            return next({status: "fail", message: "No page found",});
         }
-
         const result = await query;
-
-        res.status(200).json({
-            status: "success",
-            count: result.length,
-            page,
-            pages,
-            data: result,
-        });
-
+        return next({status: "success", count: result.length, page, pages, data: result, total});
     } catch (err) {
-        res.status(500).json({ success: false, message: "Something went wrong" });
+        next({ success: false, message: "Something went wrong" });
+    }
+}
+
+exports.orderProceedCon = async (req, next) => {
+    try {
+        if (req.body) {
+            let dataSet = {
+                vehicleType: req.body.vehicleType,
+                tripDate: req.body.tripDate,
+                tripTime: req.body.tripTime,
+                orderStatus: 'planned_trip',
+                proceedData: new Date()
+            }
+            let upDatedDataRes = await Order.updateMany({ '_id':{ $in : req.body.orderIds } }, dataSet)
+            return await next({status: "success", data: upDatedDataRes})
+        }
+    } catch {
+        return next({status: "error"})
+    }
+}
+
+exports.getAllPlannedTrips = async (req, next) => {
+    try {
+        let query = Order.find({orderStatus: 'planned_trip'});
+        const page = req.body.page || 1;
+        const pageSize = req.body.count || 10;
+        const skip = (page - 1) * pageSize;
+        const total = await Order.countDocuments({orderStatus: 'planned_trip'});
+        const pages = Math.ceil(total / pageSize);
+        query = query.skip(skip).limit(pageSize);
+        if (page > pages) {
+            return next({status: "fail", message: "No page found",});
+        }
+        const result = await query;
+        return next({status: "success", count: result.length, page, pages, data: result, total});
+    } catch (err) {
+        next({ success: false, message: "Something went wrong" });
+    }
+}
+
+exports.getAllUnPlannedTrips = async (req, next) => {
+    try {
+        let query = Order.find({orderStates: 'un_planned_trip'});
+        const page = req.body.page || 1;
+        const pageSize = req.body.count || 10;
+        const skip = (page - 1) * pageSize;
+        const total = await Order.countDocuments({orderStates: 'un_planned_trip'});
+        const pages = Math.ceil(total / pageSize);
+        query = query.skip(skip).limit(pageSize);
+        if (page > pages) {
+            return next({status: "fail", message: "No page found",});
+        }
+        const result = await query;
+        return next({status: "success", count: result.length, page, pages, data: result, total});
+    } catch (err) {
+        next({ success: false, message: "Something went wrong" });
     }
 }
 

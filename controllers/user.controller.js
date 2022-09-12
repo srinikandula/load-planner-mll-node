@@ -10,47 +10,37 @@ const {
 } = require("../services/userMail.service");
 
 exports.createUser = async (req, res, next) => {
-    console.log(res.body);
-    const {fullName, email, username, companyName, mobile, active} = req.body;
-    let newUser = {
-        fullName,
-        email,
-        username,
-        companyName,
-        mobile,
-        active: false,
-    };
-    console.log("Creating", newUser)
-    try {
-        const oldUsername = await User.findOne({username});
-        if (oldUsername)
-            return res({success: false, message: "Username already exists"})
-            // return res
-            //     .status(400)
-            //     .json({success: false, message: "Username already exists"});
-        const oldEmail = await User.findOne({email});
-        if (oldEmail)
-            return res({success: false, message: "Email already exists"})
-            // return res
-            //     .status(400)
-            //     .json({success: false, message: "Email already exists"});
+  const { fullName, email, username, companyName, phoneNumber, active } = req.body;
+  let newUser = {
+    fullName,
+    email,
+    username,
+    companyName,
+    phoneNumber,
+    active: false,
+  };
+  console.log("Creating",newUser)
 
-        const oldFullName = await User.findOne({fullName});
-        if (oldFullName)
-            return res({success: false, message: "FullName already exists"})
-            // return res
-            //     .status(400)
-            //     .json({success: false, message: "FullName already exists"});
+  try {
+    const oldUsername = await User.findOne({ username });
+    if (oldUsername)
+      return res
+        .status(400)
+        .json({ success: false, message: "Username already exists" });
+    const oldEmail = await User.findOne({ email });
+    if (oldEmail)
+      return res
+        .status(400)
+        .json({ success: false, message: "Email already exists" });
 
-        const result = await User.create(newUser);
-        await opsMail(newUser);
-        await userMail(newUser);
-        res({success: true, result});
-        // res.status(201).json({success: true, result});
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({success: false, message: "Something went wrong", error: err});
-    }
+    const result = await User.create(newUser);
+    await opsMail(newUser);
+    await userMail(newUser);
+    res.status(201).json({ success: true, result });
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ success: false, message: "Something went wrong" ,error:err });
+  }
 };
 
 exports.createLogin = async (req, res) => {

@@ -29,10 +29,11 @@ const userSchema = new mongoose.Schema({
         required: true,
         required: 'companyName is required'
     },
-    phoneNumber: {
+    mobile: {
         type: Number,
         required: true,
         required: 'mobile no required',
+        unique: true
     },
     password: {
         type: String,

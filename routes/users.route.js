@@ -34,11 +34,7 @@ router.patch('/updatePassword', UserController.updatePassword)
 // router.get('/pendingUsers', UserController.pendingUsers)
 router.post('/pendingUsers', (req, res) => {
     UserController.pendingUsers(req, result => {
-        if (result.status) {
-            res.status(200).json(result)
-        } else {
-            res.status(400).json(result)
-        }
+        res.status(result.status).json(result)
     })
 })
 
@@ -57,11 +53,7 @@ router.post('/allUsers', (req, res) => {
 // router.get('/activeUsers', UserController.activeUsers)
 router.get('/activeUsers', (req, res) => {
     UserController.activeUsers(req, result => {
-        if (result.status) {
-            res.status(200).json(result)
-        } else {
-            res.status(400).json(result)
-        }
+        res.status(result.status).json(result)
     })
 })
 
@@ -69,11 +61,13 @@ router.get('/profile', auth, UserController.profile);
 
 router.post('/activateUser', (req, res) => {
     UserController.activateUser(req, result => {
-        if (result.status) {
-            res.status(200).json(result)
-        } else {
-            res.status(400).json(result)
-        }
+        res.status(result.status).json(result)
+    })
+})
+
+router.post('/addUser', (req, res) => {
+    UserController.addUser(req, result => {
+        res.status(result.status).json(result)
     })
 })
 

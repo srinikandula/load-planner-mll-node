@@ -12,36 +12,29 @@ const Order = require("../models/order.model");
 const {decode} = require("jsonwebtoken");
 
 exports.createUser = async (req, res, next) => {
-    const {fullName, email, username, companyName, phoneNumber, active} = req.body;
+    const {fullName, email, username, companyName, mobile, active} = req.body;
     let newUser = {
         fullName,
         email,
         username,
         companyName,
-        phoneNumber,
+        mobile,
         active: false,
+        status: 'ACTIVATION_PENDING'
     };
-    console.log("Creating", newUser)
-
     try {
         const oldUsername = await User.findOne({username});
         if (oldUsername)
-            return res
-                .status(400)
-                .json({success: false, message: "Username already exists"});
+            return res({status: 400, message: "Username already exists"});
         const oldEmail = await User.findOne({email});
         if (oldEmail)
-            return res
-                .status(400)
-                .json({success: false, message: "Email already exists"});
-
+            return res({status: 400, message: "Email already exists"});
         const result = await User.create(newUser);
         await opsMail(newUser);
         await userMail(newUser);
-        res.status(201).json({success: true, result});
+        res({status: 200, result});
     } catch (err) {
-        console.log(err)
-        res.status(500).json({success: false, message: "Something went wrong", error: err});
+        res({status: 500, message: "Something went wrong", error: err});
     }
 };
 
@@ -78,34 +71,22 @@ exports.login = async (req, res, next) => {
         };
         const isPasswordCorrect = await bcrypt.compare(password, oldUser.password);
         if (!oldUser)
-            return res({success: false, message: "User doesn't exists"})
-            // return res
-            //     .status(404)
-        //     .json({success: false, message: "User doesn't exists"});
+            return res({status: 400, message: "User doesn't exists"})
         else if (!isPasswordCorrect)
-            return res({success: false, message: "Wrong Password"});
-        // return res.status(400).json({success: false, message: "Wrong Password"});
-        // const token = jwt.sign(obj, config.jwt.secret, {expiresIn: "1h",})
+            return res({status: 400, message: "Wrong Password"});
         jwt.sign(obj, config.jwt.secret, config.jwt.options, (err, token) => {
-            return res({success: true, result: obj, token});
+            return res({status: 200, result: obj, token});
         });
-        // const token = jwt.sign(obj, config.secret, {expiresIn: "1h",});
-        // return res({success: true, result: obj, token});
-        // return res.status(200).json({success: true, result: oldUser, token});
     } catch (err) {
-        // return res({success: false, message: "Something went wrong"});
-        return res.status(500).json({success: false, message: "Something went wrong"});
+        res({status: 500, message: "Something went wrong"});
     }
 };
 
 exports.updatePassword = async (req, res) => {
-
     const {username, password} = req.body;
     let newPassword = password;
-
     const salt = await bcrypt.genSalt(10);
     newPassword = await bcrypt.hash(newPassword, salt);
-
     try {
         User.findOneAndUpdate(
             {username: username},
@@ -164,13 +145,13 @@ exports.pendingUsers = async (req, res) => {
         const pages = Math.ceil(total / pageSize);
         pendingUserQuery = pendingUserQuery.skip(skip).limit(pageSize);
         if (page > pages) {
-            return res({status: true, message: "No page found",});
+            return res({status: 400, message: "No page found",});
         }
         const result = await pendingUserQuery;
         console.log(result)
-        return res({status: true, count: result.length, page, pages, data: result, total});
+        return res({status: 200, count: result.length, page, pages, data: result, total});
     } catch (err) {
-        res.status(500).join({status: false, message: err});
+        res({status: 500, message: err});
     }
 };
 
@@ -185,13 +166,13 @@ exports.activeUsers = async (req, res, next) => {
         const pages = Math.ceil(total / pageSize);
         activeUserQuery = activeUserQuery.skip(skip).limit(pageSize);
         if (page > pages) {
-            return res({status: true, message: "No page found",});
+            return res({status: 400, message: "No page found",});
         }
         const result = await activeUserQuery;
         console.log(result)
-        return res({status: true, count: result.length, page, pages, data: result, total});
+        return res({status: 200, count: result.length, page, pages, data: result, total});
     } catch (err) {
-        res.status(500).join({status: false, message: err});
+        res({status: 500, message: err});
     }
 };
 
@@ -200,10 +181,20 @@ exports.activateUser = async (req, res) => {
         console.log(req.jwt)
         activeUserData = await User.updateOne({'_id': req.body.userId}, {$set: {'status': 'ACTIVATED', 'updatedBy': req.jwt.id}})
         // activeUserData = await User.findOne({'_id': req.body.userId})
-        return res({status: true, data: activeUserData})
+        res({status: 200, data: activeUserData})
     } catch (err) {
         // console.log(err)
-        res.status(500).join({status: false, message: err});
+        res({status: 500, message: err});
+    }
+}
+
+exports.addUser = async (req, res) => {
+    try {
+        console.log(req)
+        res({status: 200})
+    } catch (err) {
+        console.log(err)
+        res({status: 500})
     }
 }
 

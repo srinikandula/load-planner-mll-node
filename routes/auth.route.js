@@ -6,21 +6,13 @@ const {addUserValidation, createLoginValidation, userLoginValidation} = require(
 
 router.post('/register', addUserValidation, (req, res) => {
     UserController.createUser(req, result => {
-        if (result.success) {
-            res.status(200).json(result)
-        } else {
-            res.status(400).json(result)
-        }
+        res.status(result.status).json(result)
     })
 })
 // router.post('/login', userLoginValidation, UserController.login)
 router.post('/login', userLoginValidation, (req, res) => {
     UserController.login(req, result => {
-        if (result.success) {
-            res.status(200).json(result);
-        } else {
-            return res.status(400).json(result);
-        }
+        res.status(result.status).json(result)
     })
 })
 

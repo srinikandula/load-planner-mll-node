@@ -7,52 +7,42 @@ const OrderController = require('../controllers/order.controller')
 router.post('/createOrder', OrderController.createOrder)
 router.get('/uploadCsvLoad', (req, res) => {
     OrderController.uploadLode(req, result => {
-        if (result.status) {
-            res.status(200).json(result)
-        } else {
-            res.status(400).json(result)
-        }
+        res.status(result.status).json(result)
     })
 });
-router.post('/uploadCsv', upload.single("uploadCsv"), OrderController.uploadCsv);
-router.get('/template', OrderController.template);
+// router.post('/uploadCsv', upload.single("uploadCsv"), OrderController.uploadCsv);
+router.post('/uploadCsv', upload.single("uploadCsv"), (req, res) => {
+    OrderController.uploadCsv(req, result => {
+        res.status(result.status).json(result)
+    })
+});
+// router.get('/template', OrderController.orderTemplate);
+router.get('/orderTemplate', (req, res) => {
+    OrderController.orderTemplate(req, result => {
+        res.status(result.status).json(result)
+    })
+});
 router.post('/getAllOrders', (req, res) => {
     OrderController.getAll(req, result => {
-        if (result.status == 'success') {
-            res.status(200).json(result)
-        } else {
-            res.status(400).json(result)
-        }
+        res.status(result.status).json(result)
     })
 });
 
 router.post('/orderProceed', (req, res) => {
     OrderController.orderProceedCon(req, result => {
-        if (result.status == 'success') {
-            res.status(200).json(result)
-        } else {
-            res.status(400).json(result)
-        }
+        res.status(result.status).json(result)
     })
 })
 
 router.post('/plannedTrips', (req, res) => {
     OrderController.getAllPlannedTrips(req, result => {
-        if (result.status == 'success') {
-            res.status(200).json(result)
-        } else {
-            res.status(400).json(result)
-        }
+        res.status(result.status).json(result)
     })
 })
 
 router.post('/unPlannedTrips', (req, res) => {
     OrderController.getAllUnPlannedTrips(req, result => {
-        if (result.status == 'success') {
-            res.status(200).json(result)
-        } else {
-            res.status(400).json(result)
-        }
+        res.status(result.status).json(result)
     })
 })
 

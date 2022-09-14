@@ -35,9 +35,9 @@ exports.createOrder = (req, res, next) => {
 
 exports.uploadLode = (req, res) => {
     try {
-        return res({status: true})
+        return res({status: 200})
     } catch (err) {
-        return err({status: false})
+        return err({status: 500})
     }
 }
 
@@ -78,33 +78,29 @@ exports.uploadCsv = (req, res) => {
                     };
                     arrayToInsert.push(singleRow);
                 }
-                //inserting into the table orders
                 Order.insertMany(arrayToInsert, (err, result) => {
                     if (err) console.log(err);
                     if (result) {
-                        res.send({ success: true, message: "file Uploaded successfully", data: result })
-                        //  res.redirect('/')
+                        res.send({ status: 200, message: "file Uploaded successfully", data: result })
                     }
                 });
             });
         }
-        // res.send("Single FIle upload success");
     } catch (err) {
-        res.status(500).json({ success: false, message: "Something went wrong" });
+        res({ status: 500, message: "Something went wrong" });
     }
 };
 
-exports.template = async (req, res, next) => {
-
+exports.orderTemplate = async (req, res, next) => {
     try {
         const templateFileUrl = `${configuration.baseUrl}/template/order/orderTemplate.csv`;
         if (templateFileUrl) {
-            res.status(200).send({ success: true, file: templateFileUrl })
+            res({ status: 200, file: templateFileUrl })
         } else {
-            res.status(404).send({ success: false, message: "Template not found" })
+            res({ status: 400, message: "Template not found" })
         }
     } catch (err) {
-        res.status(500).json({ success: false, message: "Something went wrong" });
+        res({ status: 500, message: "Something went wrong" });
     }
 }
 
@@ -119,17 +115,16 @@ exports.getAll = async (req, next) => {
         const pages = Math.ceil(total / pageSize);
         query = query.skip(skip).limit(pageSize);
         if (page > pages) {
-            return next({status: "fail", message: "No page found",});
+            return next({status: 400, message: "No page found",});
         }
         const result = await query;
-        return next({status: "success", count: result.length, page, pages, data: result, total});
+        return next({status: 200, count: result.length, page, pages, data: result, total});
     } catch (err) {
-        next({ success: false, message: "Something went wrong" });
+        next({ status: 500, message: "Something went wrong" });
     }
 }
 
 exports.orderProceedCon = async (req, next) => {
-    console.log(req.body)
     try {
         if (req.body) {
             let dataSet = {
@@ -140,10 +135,10 @@ exports.orderProceedCon = async (req, next) => {
             }
             let upDatedDataRes = await Order.updateMany({ '_id':{ $in : req.body.orderIds } }, {tripId: 'notExit'})
             let plannedTripDataRes = await plannedTrip.insertMany(dataSet)
-            return await next({status: "success", orderData: upDatedDataRes, plannedTripData: plannedTripDataRes})
+            next({status: 200, orderData: upDatedDataRes, plannedTripData: plannedTripDataRes})
         }
-    } catch {
-        return next({status: "error"})
+    } catch (err) {
+        return next({status: 500, message: err})
     }
 }
 
@@ -157,12 +152,12 @@ exports.getAllPlannedTrips = async (req, next) => {
         const pages = Math.ceil(total / pageSize);
         query = query.skip(skip).limit(pageSize);
         if (page > pages) {
-            return next({status: "fail", message: "No page found",});
+            return next({status: 400, message: "No page found",});
         }
         const result = await query;
-        return next({status: "success", count: result.length, page, pages, data: result, total});
+        return next({status: 200, count: result.length, page, pages, data: result, total});
     } catch (err) {
-        next({ success: false, message: "Something went wrong" });
+        next({ status: 500, message: "Something went wrong" });
     }
 }
 
@@ -176,12 +171,12 @@ exports.getAllUnPlannedTrips = async (req, next) => {
         const pages = Math.ceil(total / pageSize);
         query = query.skip(skip).limit(pageSize);
         if (page > pages) {
-            return next({status: "fail", message: "No page found",});
+            return next({status: 400, message: "No page found",});
         }
         const result = await query;
-        return next({status: "success", count: result.length, page, pages, data: result, total});
+        return next({status: 200, count: result.length, page, pages, data: result, total});
     } catch (err) {
-        next({ success: false, message: "Something went wrong" });
+        next({ success: 500, message: "Something went wrong" });
     }
 }
 

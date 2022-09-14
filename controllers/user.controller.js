@@ -8,6 +8,7 @@ const {
     userMail,
     userLoginPassword,
 } = require("../services/userMail.service");
+const Order = require("../models/order.model");
 
 exports.createUser = async (req, res, next) => {
   const { fullName, email, username, companyName, phoneNumber, active } = req.body;
@@ -75,10 +76,10 @@ exports.login = async (req, res, next) => {
             return res({success: false, message: "User doesn't exists"})
             // return res
             //     .status(404)
-            //     .json({success: false, message: "User doesn't exists"});
+        //     .json({success: false, message: "User doesn't exists"});
         else if (!isPasswordCorrect)
             return res({success: false, message: "Wrong Password"});
-            // return res.status(400).json({success: false, message: "Wrong Password"});
+        // return res.status(400).json({success: false, message: "Wrong Password"});
         const token = jwt.sign({data: oldUser}, config.jwt.secret, {
             expiresIn: "1h",
         });
@@ -147,44 +148,47 @@ exports.allUsers = async (params, next) => {
 
 
 exports.pendingUsers = async (req, res, next) => {
-
     try {
-       await User.find({active: false}, (err, user) => {
-            if (err) {
-                return res.status(404).json({success: false, message: "error"});
-            } else {
-                return res
-                    .status(200)
-                    .json({success: true, length: user.length, data: user});
-            }
-        });
+        let pendingUserQuery = await User.find({status: 'ACTIVATION_PENDING'});
+        const page = req.body.page || 1;
+        const pageSize = req.body.count || 10;
+        const skip = (page - 1) * pageSize;
+        const total = await User.countDocuments({status: 'ACTIVATION_PENDING'});
+        const pages = Math.ceil(total / pageSize);
+        pendingUserQuery = pendingUserQuery.skip(skip).limit(pageSize);
+        if (page > pages) {
+            return next({status: "fail", message: "No page found",});
+        }
+        const result = await pendingUserQuery;
+        return next({status: "success", count: result.length, page, pages, data: result, total});
+
+        // await User.find({status: 'ACTIVATION_PENDING'}, (err, user) => {
+        //     if (err) {
+        //         return res({success: false, message: "error"});
+        //     } else {
+        //         return res({success: true, length: user.length, data: user});
+        //     }
+        // });
     } catch (err) {
         res.status(500).join({success: false, message: err});
     }
-
 };
 
 
 exports.activeUsers = async (req, res, next) => {
-
     try {
         User.find({active: true}, (err, user) => {
             if (err) {
                 return res.status(404).json({success: false, message: "error"});
             } else {
-                return res
-                    .status(200)
-                    .json({success: true, length: user.length, data: user});
+                return res.status(200).json({success: true, length: user.length, data: user});
             }
         });
     } catch (err) {
         res.status(500).join({success: false, message: err});
     }
-
-
 };
 
 exports.profile = (req, res, next) => {
-  console.log('--------------------', req)
     res.json({user: req.user});
 };

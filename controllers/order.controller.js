@@ -1,4 +1,5 @@
 const Order = require("../models/order.model");
+const plannedTrip = require("../models/plannedTrip.model");
 const csv = require('csvtojson');
 const path = require('path');
 const { request } = require("http");
@@ -9,9 +10,7 @@ let mongoose = require('mongoose');
 
 
 exports.createOrder = (req, res, next) => {
-
     let newOrder = new Order(req.body);
-
     try {
         newOrder.save().then((order) => {
             if (order) {
@@ -23,7 +22,6 @@ exports.createOrder = (req, res, next) => {
                     }
                 })
             }
-
         }).catch((e) => {
             console.log("error", e)
         })
@@ -35,25 +33,48 @@ exports.createOrder = (req, res, next) => {
 
 }
 
-exports.uploadCsv = (req, res) => {
+exports.uploadLode = (req, res) => {
+    try {
+        return res({status: true})
+    } catch (err) {
+        return err({status: false})
+    }
+}
 
+exports.uploadCsv = (req, res) => {
     try {
         let filePath = req.file.path
         importFile('./uploads' + req.file.filename);
         function importFile() {
-
             var arrayToInsert = [];
             csv().fromFile(filePath).then(source => {
                 // Fetching the all data from each row
                 for (var i = 0; i < source.length; i++) {
+                    // console.log(source[i]);
                     var singleRow = {
-                        consignmentNo: source[i]["consignmentNo"],
-                        consignorCity: source[i]["consignorCity"],
-                        consignorState: source[i]["consignorState"],
-                        consigneeCity: source[i]["consigneeCity"],
-                        consigneeState: source[i]["consigneeState"],
-                        volumeCft: source[i]["volumeCft"],
-                        weight: source[i]["weight"],
+                        // consignmentNo: source[i]["consignmentNo"],
+                        // consignorCity: source[i]["consignorCity"],
+                        // consignorState: source[i]["consignorState"],
+                        // consigneeCity: source[i]["consigneeCity"],
+                        // consigneeState: source[i]["consigneeState"],
+                        // volumeCft: source[i]["volumeCft"],
+                        // weight: source[i]["weight"],
+                        orderNo: source[i]["OrderNo"],
+                        consignorName: source[i]["ConsignorName"],
+                        consigneeName: source[i]["ConsigneeName"],
+                        consignorCity: source[i]["ConsignorCity"],
+                        consigneeCity: source[i]["ConsigneeCity"],
+                        consignorState: source[i]["ConsignorState"],
+                        consigneeState: source[i]["ConsigneeState"],
+                        weight: source[i]["Weight"],
+                        orderDate: source[i]["OrderDate"],
+                        volumetricWeight: source[i]["VolumetricWeight"],
+                        volumeCFT: source[i]["VolumeCFT"],
+                        etc: source[i]["ETA"],
+                        productName: source[i]["ProductName"],
+                        productQty: source[i]["ProductQty"],
+                        countOfCase: source[i]["CountOfCase"],
+                        caseType: source[i]["CaseType"],
                     };
                     arrayToInsert.push(singleRow);
                 }
@@ -108,16 +129,17 @@ exports.getAll = async (req, next) => {
 }
 
 exports.orderProceedCon = async (req, next) => {
+    console.log(req.body)
     try {
         if (req.body) {
             let dataSet = {
+                orderIds: req.body.orderIds,
                 vehicleType: req.body.vehicleType,
                 tripDate: req.body.tripDate,
-                tripTime: req.body.tripTime,
-                orderStatus: 'planned_trip',
-                proceedData: new Date()
+                tripTime: req.body.tripTime
             }
-            let upDatedDataRes = await Order.updateMany({ '_id':{ $in : req.body.orderIds } }, dataSet)
+            let upDatedDataRes = await Order.updateMany({ '_id':{ $in : req.body.orderIds } }, {tripId: true})
+            let plannedTripDataRes = await plannedTrip.insertMany(dataSet)
             return await next({status: "success", data: upDatedDataRes})
         }
     } catch {

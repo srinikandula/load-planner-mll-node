@@ -29,10 +29,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         required: 'companyName is required'
     },
-    phoneNumber:{
-        type:Number,
-        required:true,
-        required:'mobile no required',
+    phoneNumber: {
+        type: Number,
+        required: true,
+        required: 'mobile no required',
     },
     password: {
         type: String,
@@ -41,14 +41,20 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         // required:true
     },
-    activatedBy:{
-        type:String,
+    activatedBy: {
+        type: String,
     },
-    activatedOn:{
-        type:Date,
+    activatedOn: {
+        type: Date,
+    },
+    status: {
+        type: String
+    },
+    updatedBy: {
+        type: String
     }
 
-},{timestamps:true})
+}, {timestamps: true})
 
 let User = module.exports = mongoose.model('User', userSchema, 'user')
 

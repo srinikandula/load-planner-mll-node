@@ -9,39 +9,40 @@ const {
     userLoginPassword,
 } = require("../services/userMail.service");
 const Order = require("../models/order.model");
+const {decode} = require("jsonwebtoken");
 
 exports.createUser = async (req, res, next) => {
-  const { fullName, email, username, companyName, phoneNumber, active } = req.body;
-  let newUser = {
-    fullName,
-    email,
-    username,
-    companyName,
-    phoneNumber,
-    active: false,
-  };
-  console.log("Creating",newUser)
+    const {fullName, email, username, companyName, phoneNumber, active} = req.body;
+    let newUser = {
+        fullName,
+        email,
+        username,
+        companyName,
+        phoneNumber,
+        active: false,
+    };
+    console.log("Creating", newUser)
 
-  try {
-    const oldUsername = await User.findOne({ username });
-    if (oldUsername)
-      return res
-        .status(400)
-        .json({ success: false, message: "Username already exists" });
-    const oldEmail = await User.findOne({ email });
-    if (oldEmail)
-      return res
-        .status(400)
-        .json({ success: false, message: "Email already exists" });
+    try {
+        const oldUsername = await User.findOne({username});
+        if (oldUsername)
+            return res
+                .status(400)
+                .json({success: false, message: "Username already exists"});
+        const oldEmail = await User.findOne({email});
+        if (oldEmail)
+            return res
+                .status(400)
+                .json({success: false, message: "Email already exists"});
 
-    const result = await User.create(newUser);
-    await opsMail(newUser);
-    await userMail(newUser);
-    res.status(201).json({ success: true, result });
-  } catch (err) {
-    console.log(err)
-    res.status(500).json({ success: false, message: "Something went wrong" ,error:err });
-  }
+        const result = await User.create(newUser);
+        await opsMail(newUser);
+        await userMail(newUser);
+        res.status(201).json({success: true, result});
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({success: false, message: "Something went wrong", error: err});
+    }
 };
 
 exports.createLogin = async (req, res) => {
@@ -71,6 +72,10 @@ exports.login = async (req, res, next) => {
     const {username, password} = req.body;
     try {
         const oldUser = await User.findOne({username});
+        var obj = {
+            id: oldUser._id,
+            username: oldUser.username
+        };
         const isPasswordCorrect = await bcrypt.compare(password, oldUser.password);
         if (!oldUser)
             return res({success: false, message: "User doesn't exists"})
@@ -80,10 +85,12 @@ exports.login = async (req, res, next) => {
         else if (!isPasswordCorrect)
             return res({success: false, message: "Wrong Password"});
         // return res.status(400).json({success: false, message: "Wrong Password"});
-        const token = jwt.sign({data: oldUser}, config.jwt.secret, {
-            expiresIn: "1h",
+        // const token = jwt.sign(obj, config.jwt.secret, {expiresIn: "1h",})
+        jwt.sign(obj, config.jwt.secret, config.jwt.options, (err, token) => {
+            return res({success: true, result: obj, token});
         });
-        return res({success: true, result: oldUser, token});
+        // const token = jwt.sign(obj, config.secret, {expiresIn: "1h",});
+        // return res({success: true, result: obj, token});
         // return res.status(200).json({success: true, result: oldUser, token});
     } catch (err) {
         // return res({success: false, message: "Something went wrong"});
@@ -147,9 +154,9 @@ exports.allUsers = async (params, next) => {
 };
 
 
-exports.pendingUsers = async (req, res, next) => {
+exports.pendingUsers = async (req, res) => {
     try {
-        let pendingUserQuery = await User.find({status: 'ACTIVATION_PENDING'});
+        let pendingUserQuery = User.find({status: 'ACTIVATION_PENDING'});
         const page = req.body.page || 1;
         const pageSize = req.body.count || 10;
         const skip = (page - 1) * pageSize;
@@ -157,37 +164,48 @@ exports.pendingUsers = async (req, res, next) => {
         const pages = Math.ceil(total / pageSize);
         pendingUserQuery = pendingUserQuery.skip(skip).limit(pageSize);
         if (page > pages) {
-            return next({status: "fail", message: "No page found",});
+            return res({status: true, message: "No page found",});
         }
         const result = await pendingUserQuery;
-        return next({status: "success", count: result.length, page, pages, data: result, total});
-
-        // await User.find({status: 'ACTIVATION_PENDING'}, (err, user) => {
-        //     if (err) {
-        //         return res({success: false, message: "error"});
-        //     } else {
-        //         return res({success: true, length: user.length, data: user});
-        //     }
-        // });
+        console.log(result)
+        return res({status: true, count: result.length, page, pages, data: result, total});
     } catch (err) {
-        res.status(500).join({success: false, message: err});
+        res.status(500).join({status: false, message: err});
     }
 };
 
 
 exports.activeUsers = async (req, res, next) => {
     try {
-        User.find({active: true}, (err, user) => {
-            if (err) {
-                return res.status(404).json({success: false, message: "error"});
-            } else {
-                return res.status(200).json({success: true, length: user.length, data: user});
-            }
-        });
+        let activeUserQuery = User.find({status: 'ACTIVATED'});
+        const page = req.body.page || 1;
+        const pageSize = req.body.count || 10;
+        const skip = (page - 1) * pageSize;
+        const total = await User.countDocuments({status: 'ACTIVATED'});
+        const pages = Math.ceil(total / pageSize);
+        activeUserQuery = activeUserQuery.skip(skip).limit(pageSize);
+        if (page > pages) {
+            return res({status: true, message: "No page found",});
+        }
+        const result = await activeUserQuery;
+        console.log(result)
+        return res({status: true, count: result.length, page, pages, data: result, total});
     } catch (err) {
-        res.status(500).join({success: false, message: err});
+        res.status(500).join({status: false, message: err});
     }
 };
+
+exports.activateUser = async (req, res) => {
+    try {
+        console.log(req.jwt)
+        activeUserData = await User.updateOne({'_id': req.body.userId}, {$set: {'status': 'ACTIVATED', 'updatedBy': req.jwt.id}})
+        // activeUserData = await User.findOne({'_id': req.body.userId})
+        return res({status: true, data: activeUserData})
+    } catch (err) {
+        // console.log(err)
+        res.status(500).join({status: false, message: err});
+    }
+}
 
 exports.profile = (req, res, next) => {
     res.json({user: req.user});

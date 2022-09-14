@@ -31,7 +31,16 @@ router.post('/login', userLoginValidation, (req, res) => {
 router.post('/createLogin', createLoginValidation, UserController.createLogin)
 router.patch('/updatePassword', UserController.updatePassword)
 
-router.get('/pendingUsers', UserController.pendingUsers)
+// router.get('/pendingUsers', UserController.pendingUsers)
+router.post('/pendingUsers', (req, res) => {
+    UserController.pendingUsers(req, result => {
+        if (result.success) {
+            res.status(200).json(result)
+        } else {
+            res.status(400).json(result)
+        }
+    })
+})
 
 router.post('/allUsers', (req, res) => {
      UserController.allUsers(req.params, result => {

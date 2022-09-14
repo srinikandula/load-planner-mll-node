@@ -5,6 +5,15 @@ const OrderController = require('../controllers/order.controller')
 
 
 router.post('/createOrder', OrderController.createOrder)
+router.get('/uploadCsvLoad', (req, res) => {
+    OrderController.uploadLode(req, result => {
+        if (result.status) {
+            res.status(200).json(result)
+        } else {
+            res.status(400).json(result)
+        }
+    })
+});
 router.post('/uploadCsv', upload.single("uploadCsv"), OrderController.uploadCsv);
 router.get('/template', OrderController.template);
 router.post('/getAllOrders', (req, res) => {

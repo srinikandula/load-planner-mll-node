@@ -16,4 +16,4 @@ const plannedTripSchema = new mongoose.Schema({
     },
 }, {timestamps: true});
 
-let plannedTrip = module.exports = mongoose.model('plannedTrip', plannedTripSchema);
+let plannedTrip = module.exports = mongoose.model('plannedTrip', plannedTripSchema, 'plannedTrip');

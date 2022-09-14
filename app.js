@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const path = require('path')
 const cors = require('cors')
 const passport = require('passport')
+const authRoute = require('./routes/auth.route')
 const usersRoute = require('./routes/users.route')
 const ordersRoute = require('./routes/order.route')
 const session = require('express-session');
@@ -11,6 +12,7 @@ require('dotenv').config()
 const app = express()
 const config = require('./config/config')
 const connectDB = require('./config/db');
+const authMiddleware = require('./middlewares/auth');
 
 connectDB();
 
@@ -31,6 +33,11 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')))
 
 global.configuration = require('./config/config')
+
+
+app.use('/api/v1/auth', authRoute)
+
+app.use(authMiddleware);
 
 app.use('/api/v1/users', usersRoute)
 

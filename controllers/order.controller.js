@@ -138,9 +138,9 @@ exports.orderProceedCon = async (req, next) => {
                 tripDate: req.body.tripDate,
                 tripTime: req.body.tripTime
             }
-            let upDatedDataRes = await Order.updateMany({ '_id':{ $in : req.body.orderIds } }, {tripId: true})
+            let upDatedDataRes = await Order.updateMany({ '_id':{ $in : req.body.orderIds } }, {tripId: 'notExit'})
             let plannedTripDataRes = await plannedTrip.insertMany(dataSet)
-            return await next({status: "success", data: upDatedDataRes})
+            return await next({status: "success", orderData: upDatedDataRes, plannedTripData: plannedTripDataRes})
         }
     } catch {
         return next({status: "error"})

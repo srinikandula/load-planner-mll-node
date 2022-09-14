@@ -49,8 +49,8 @@ const orderSchema = new mongoose.Schema({
     caseType: {
         type: String
     },
-    orderStatus: {
-        type: Boolean
+    tripId: {
+        type: String
     },
     proceedData: {
         type: Date

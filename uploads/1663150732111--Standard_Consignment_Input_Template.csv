@@ -1,0 +1,11 @@
+OrderNo,ConsignorName,ConsigneeName,ConsignorCity,ConsigneeCity,ConsignorState,ConsigneeState,Weight,OrderDate,VolumetricWeight,VolumeCFT,ETA,ProductName,ProductQty,CountOfCase,CaseType
+10872312,Bajaj Electrical Limited,M.S.K.ELECTRICALS,Luhari,Guwahati,Haryana,Assam,6962,01/11/2021,659.58,1373.74,03/11/2021,Fan,500,100,Boxes
+10872604,Bajaj Electrical Limited,SHREE HARI ELECTRICALS,Luhari,Guwahati,Haryana,Assam,6962,01/11/2021,92.33,1145.91,03/11/2021,Heater,500,100,Boxes
+10872616,Bajaj Electrical Limited,ESAB ELECTRICALS.,Luhari,Kolkata,Haryana,West Bengal,5182.8,01/11/2021,0,15469.77,03/11/2021,LED,500,100,Boxes
+10872633,Bajaj Electrical Limited,SERVIDOR INCORPORATION,Luhari,Kolkata,Haryana,West Bengal,69967.8,01/11/2021,204.4,638.82,03/11/2021,Cooker,500,100,Boxes
+10872671,Bajaj Electrical Limited,M/S A K ENTERPRISES,Luhari,Noida,Haryana,Uttar Pradesh,2936.96,01/11/2021,58.69,98.49,03/11/2021,Cooker,500,100,Boxes
+10872680,Bajaj Electrical Limited,SHIVAM TRADERS.,Luhari,Lucknow,Haryana,Uttar Pradesh,466.58,01/11/2021,213.69,295.47,03/11/2021,Fan,500,100,Boxes
+10872936,Bajaj Electrical Limited,ICON ENTERPRISES,Luhari,Lucknow,Haryana,Uttar Pradesh,1399.74,01/11/2021,0,16479.25,03/11/2021,Heater,500,100,Boxes
+10872946,Bajaj Electrical Limited,OMKAR ENTERPRISES,Luhari,Patna,Haryana,Bihar,70522.56,01/11/2021,110.16,5493.08,03/11/2021,LED,500,100,Boxes
+10872953,Bajaj Electrical Limited,RAJ ELECTRICAL WORKS.,Luhari,Patna,Haryana,Bihar,23507.52,01/11/2021,1201.49,5513.77,03/11/2021,Cooker,500,100,Boxes
+10872962,Bajaj Electrical Limited,N.R.ELECTRICALS,Luhari,Hyderabad,Haryana,Telangana,14196,02/11/2021,96.21,1412.51,03/11/2021,Cooker,500,100,Boxes

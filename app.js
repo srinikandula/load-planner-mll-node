@@ -34,15 +34,10 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 global.configuration = require('./config/config')
 
-
 app.use('/api/v1/auth', authRoute)
-
 app.use(authMiddleware);
-
 app.use('/api/v1/users', usersRoute)
-
 app.use('/api/v1/orders', ordersRoute)
-
 app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {

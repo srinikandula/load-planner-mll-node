@@ -29,6 +29,9 @@ exports.createUser = async (req, res, next) => {
         const oldEmail = await User.findOne({email});
         if (oldEmail)
             return res({status: 400, message: "Email already exists"});
+        const oldMobile = await User.findOne({mobile});
+        if (oldMobile)
+            return res({status: 400, message: "Mobile already exists"});
         const result = await User.create(newUser);
         await opsMail(newUser);
         await userMail(newUser);

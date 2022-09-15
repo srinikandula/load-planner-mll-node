@@ -53,6 +53,9 @@ const userSchema = new mongoose.Schema({
     },
     updatedBy: {
         type: String
+    },
+    remark: {
+        type: String
     }
 
 }, {timestamps: true})
